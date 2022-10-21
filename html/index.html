@@ -32,7 +32,7 @@
         ////////////////////////setup scene////////////////////////
         clock = new THREE.Clock();
         const scene = new THREE.Scene();
-        scene.background = backgroundLoader.load('https://i.redd.it/3rf2d71088o91.png');
+        scene.background = backgroundLoader.load('../assets/img/5315420.jpg');
         const camera = new THREE.PerspectiveCamera(50, miniWindowSize.width / miniWindowSize.height);
         camera.position.set(0, 0, 80);
 
@@ -172,13 +172,13 @@
         function movis(obj) {
             document.onkeydown = function (e) {
                 if (e.keyCode === 37) {
-                    obj.position.x -= 1;
+                    obj.position.x -= 2;
                     if (obj.position.x < -63) {
                         obj.position.x = -63;
                     }
                 }
                 if (e.keyCode === 39) {
-                    obj.position.x += 1;
+                    obj.position.x += 2;
                     if (obj.position.x > 63) {
                         obj.position.x = 63;
                     }
@@ -191,17 +191,47 @@
             //character.rotation.x += 0.01;
             //character.rotation.y += 0.01;
             var nar = scene.getObjectByName('orange');
+            var man = scene.getObjectByName('apple');
+            var pla = scene.getObjectByName('banana');
+            var cer = scene.getObjectByName('cherries');
+            var manV = scene.getObjectByName('greenapple');
+            var san = scene.getObjectByName('sandia');
+            var fre = scene.getObjectByName('fresa');
+            var per = scene.getObjectByName('pera');
+            var pin = scene.getObjectByName('pineapple');
             nar.position.y -= 0.07;
             nar.rotation.x += 0.01;
             nar.rotation.y += 0.01;
+            man.position.y -= 0.1;
+            man.rotation.x += 0.01;
+            man.rotation.y += 0.01;
+            pla.position.y -= 0.09;
+            pla.rotation.x += 0.01;
+            pla.rotation.y += 0.01;
+            cer.position.y -= 0.2;
+            cer.rotation.x += 0.01;
+            cer.rotation.y += 0.01;
+            manV.position.y -= 0.095;
+            manV.rotation.x += 0.01;
+            manV.rotation.y += 0.01;
+            san.position.y -= 0.15;
+            san.rotation.x += 0.01;
+            san.rotation.y += 0.01;
+            fre.position.y -= 0.095;
+            fre.rotation.x += 0.01;
+            fre.rotation.y += 0.01;
+            per.position.y -= 0.04;
+            per.rotation.x += 0.01;
+            per.rotation.y += 0.01;
+            pin.position.y -= 0.2;
+            pin.rotation.x += 0.01;
+            pin.rotation.y += 0.01;
 
             renderer.render(scene, camera);
         }
 
         animate();
     </script>
-    <script type="module" id="lvl2"></script>
-    <script type="module" id="lvl3"></script>
 </body>
 
 </html>
