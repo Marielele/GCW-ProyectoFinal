@@ -1,0 +1,17 @@
+html {
+    height: 100%;
+}
+
+body {
+    overflow: hidden;
+    height: 100%;
+    background: rgb(103,89,122);
+    background: -moz-linear-gradient(0deg, rgba(103,89,122,1) 0%, rgba(254,249,239,1) 100%);
+    background: -webkit-linear-gradient(0deg, rgba(103,89,122,1) 0%, rgba(254,249,239,1) 100%);
+    background: linear-gradient(0deg, rgba(103,89,122,1) 0%, rgba(254,249,239,1) 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#67597a",endColorstr="#fef9ef",GradientType=1);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
