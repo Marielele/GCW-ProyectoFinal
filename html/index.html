@@ -23,6 +23,8 @@
         ////////////////////////variables////////////////////////
         var clock, deltaTime;
         var miniWindowSize = { width: 1289, height: 720 };
+        
+        var right1=false,left1=false,right2=false,left2=false;
 
         ////////////////////////loaders////////////////////////
         const backgroundLoader = new THREE.TextureLoader();
@@ -154,11 +156,11 @@
             '../../assets/3DModels/GLB/canastita.glb',
             function (gltf) {
                 let basket = gltf.scene;
-                basket.position.set(-10, -25, 10);
+                basket.position.set(10, -25, 10);
                 scene.add(basket);
                 basket.name = 'basket';
                 var basket2 = basket.clone();
-                basket2.position.set(10, -25, 10);
+                basket2.position.set(-10, -25, 10);
                 scene.add(basket2);
                 basket2.name = 'canasta';
             }
@@ -174,29 +176,33 @@
         ////////////////////////movement////////////////////////
         function movis(obj1, obj2) {
             document.onkeydown = function (e) {
+                
                 if (e.keyCode === 37) {
-                    obj1.position.x -= 2;
-                    if (obj1.position.x < -63) {
-                        obj1.position.x = -63;
-                    }
+                    left1=true;
                 }
                 if (e.keyCode === 39) {
-                    obj1.position.x += 2;
-                    if (obj1.position.x > 63) {
-                        obj1.position.x = 63;
-                    }
+                    right1=true;
                 }
                 if (e.keyCode === 65) {
-                    obj2.position.x -= 2;
-                    if (obj2.position.x < -63) {
-                        obj2.position.x = -63;
-                    }
+                    left2=true;
                 }
                 if (e.keyCode === 68) {
-                    obj2.position.x += 2;
-                    if (obj2.position.x > 63) {
-                        obj2.position.x = 63;
-                    }
+                    right2=true;
+                }
+            }
+            document.onkeyup = function (e) {
+                
+                if (e.keyCode === 37) {
+                    left1=false;
+                }
+                if (e.keyCode === 39) {
+                    right1=false;
+                }
+                if (e.keyCode === 65) {
+                    left2=false;
+                }
+                if (e.keyCode === 68) {
+                    right2=false;
                 }
             }
         }
@@ -207,7 +213,7 @@
             //character.rotation.y += 0.01;
             var basket = scene.getObjectByName('basket');
             var canasta = scene.getObjectByName('canasta');
-            movis(basket,canasta);
+            movis(basket, canasta);
 
             var nar = scene.getObjectByName('orange');
             var man = scene.getObjectByName('apple');
@@ -245,7 +251,30 @@
             pin.position.y -= 0.2;
             pin.rotation.x += 0.01;
             pin.rotation.y += 0.01;
-
+            if (left1==true) {
+                basket.position.x -= 1;
+                    if (basket.position.x < -63) {
+                        basket.position.x = -63;
+                    }
+                }
+                if (right1==true) {
+                    basket.position.x += 1;
+                    if (basket.position.x > 63) {
+                        basket.position.x = 63;
+                    }
+                }
+                if (left2==true) {
+                    canasta.position.x -= 1;
+                    if (canasta.position.x < -63) {
+                        canasta.position.x = -63;
+                    }
+                }
+                if (right2==true) {
+                    canasta.position.x += 1;
+                    if (canasta.position.x > 63) {
+                        canasta.position.x = 63;
+                    }
+                }
             renderer.render(scene, camera);
         }
 
