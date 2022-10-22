@@ -154,10 +154,13 @@
             '../../assets/3DModels/GLB/canastita.glb',
             function (gltf) {
                 let basket = gltf.scene;
-                basket.position.set(0, -25, 10);
+                basket.position.set(-10, -25, 10);
                 scene.add(basket);
                 basket.name = 'basket';
-                movis(basket);
+                var basket2 = basket.clone();
+                basket2.position.set(10, -25, 10);
+                scene.add(basket2);
+                basket2.name = 'canasta';
             }
         );
 
@@ -169,18 +172,30 @@
         scene.add(ambientlight);
 
         ////////////////////////movement////////////////////////
-        function movis(obj) {
+        function movis(obj1, obj2) {
             document.onkeydown = function (e) {
                 if (e.keyCode === 37) {
-                    obj.position.x -= 2;
-                    if (obj.position.x < -63) {
-                        obj.position.x = -63;
+                    obj1.position.x -= 2;
+                    if (obj1.position.x < -63) {
+                        obj1.position.x = -63;
                     }
                 }
                 if (e.keyCode === 39) {
-                    obj.position.x += 2;
-                    if (obj.position.x > 63) {
-                        obj.position.x = 63;
+                    obj1.position.x += 2;
+                    if (obj1.position.x > 63) {
+                        obj1.position.x = 63;
+                    }
+                }
+                if (e.keyCode === 65) {
+                    obj2.position.x -= 2;
+                    if (obj2.position.x < -63) {
+                        obj2.position.x = -63;
+                    }
+                }
+                if (e.keyCode === 68) {
+                    obj2.position.x += 2;
+                    if (obj2.position.x > 63) {
+                        obj2.position.x = 63;
                     }
                 }
             }
@@ -190,6 +205,10 @@
             requestAnimationFrame(animate);
             //character.rotation.x += 0.01;
             //character.rotation.y += 0.01;
+            var basket = scene.getObjectByName('basket');
+            var canasta = scene.getObjectByName('canasta');
+            movis(basket,canasta);
+
             var nar = scene.getObjectByName('orange');
             var man = scene.getObjectByName('apple');
             var pla = scene.getObjectByName('banana');
