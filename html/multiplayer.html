@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/estilazo.css">
+    <link rel="shortcut icon" href="/assets/img/happy-orange_99796.ico" type="image/x-icon">
+    <title>Frenzy Fruit</title>
+</head>
+
+<body class="backGame">
+    <!--
+        <script src="../js/threejs/three.js"></script>
+    -->
+    <script type="module" id="lvl1">
+        import * as THREE from "../js/threejs/three.module.js";
+        import { OrbitControls } from "../js/threejs/OrbitControls.js";
+        import { GLTFLoader } from "../js/threejs/GLTFLoader.js";
+        import { FBXLoader } from "../js/threejs/FBXLoader.js";
+
+        ////////////////////////variables////////////////////////
+        var clock, deltaTime;
+        var miniWindowSize = { width: 1280, height: 720 };
+
+        ////////////////////////loaders////////////////////////
+        const backgroundLoader = new THREE.TextureLoader();
+        const fbxLoader = new FBXLoader();
+        const gltfLoader = new GLTFLoader();
+
+        ////////////////////////setup scene////////////////////////
+        clock = new THREE.Clock();
+        const scene = new THREE.Scene();
+        scene.background = backgroundLoader.load('../assets/img/5315420.jpg');
+        const camera = new THREE.PerspectiveCamera(50, miniWindowSize.width / miniWindowSize.height);
+        camera.position.set(0, 0, 180);
+
+        const renderer = new THREE.WebGLRenderer();
+        renderer.setSize(miniWindowSize.width, miniWindowSize.height);
+        document.body.appendChild(renderer.domElement);
+        //const cameraControl = new OrbitControls(camera, renderer.domElement)
+
+        ////////////////////////models////////////////////////
+        gltfLoader.load(
+            '../../assets/3DModels/GLB/naranjaG.glb',
+            function (gltf) {
+                let orange = gltf.scene;
+                orange.position.set(0, 40, 7);
+                scene.add(orange);
+                orange.name = 'orange';
+            }
+        );
+
+        gltfLoader.load(
+            '../../assets/3DModels/GLB/manzanaRojaG.glb',
+            function (gltf) {
+                let apple = gltf.scene;
+                apple.position.set(10, 40, 7);
+                scene.add(apple);
+                apple.name = 'apple';
+            }
+        );
+
+        gltfLoader.load(
+            '../../assets/3DModels/GLB/platanoG.glb',
+            function (gltf) {
+                let banana = gltf.scene;
+                banana.position.set(-40, 40, 7);
+                scene.add(banana);
+                banana.name = 'banana';
+            }
+        );
+
+        gltfLoader.load(
+            '../../assets/3DModels/GLB/cerezasG.glb',
+            function (gltf) {
+                let cherries = gltf.scene;
+                cherries.position.set(20, 40, 7);
+                scene.add(cherries);
+                cherries.name = 'cherries';
+            }
+        );
+
+        gltfLoader.load(
+            '../../assets/3DModels/GLB/manzanaVerdeG.glb',
+            function (gltf) {
+                let greenapple = gltf.scene;
+                greenapple.position.set(-10, 40, 7);
+                scene.add(greenapple);
+                greenapple.name = 'greenapple';
+            }
+        );
+
+        gltfLoader.load(
+            '../../assets/3DModels/GLB/sandiaG.glb',
+            function (gltf) {
+                let sandia = gltf.scene;
+                sandia.position.set(-20, 40, 7);
+                scene.add(sandia);
+                sandia.name = 'sandia';
+            }
+        );
+
+        gltfLoader.load(
+            '../../assets/3DModels/GLB/fresaG.glb',
+            function (gltf) {
+                let fresa = gltf.scene;
+                fresa.position.set(30, 40, 7);
+                scene.add(fresa);
+                fresa.name = 'fresa';
+            }
+        );
+
+        gltfLoader.load(
+            '../../assets/3DModels/GLB/peraG.glb',
+            function (gltf) {
+                let pera = gltf.scene;
+                pera.position.set(-30, 40, 7);
+                scene.add(pera);
+                pera.name = 'pera';
+            }
+        );
+
+        gltfLoader.load(
+            '../../assets/3DModels/GLB/pinaG.glb',
+            function (gltf) {
+                let pineapple = gltf.scene;
+                pineapple.position.set(40, 40, 7);
+                scene.add(pineapple);
+                pineapple.name = 'pineapple';
+            }
+        );
+
+        ////// Players //////
+
+        fbxLoader.load(
+            '../../assets/3DModels/FBX/rover.fbx',
+            (rover) => {
+                rover.position.set(15, -75, 0);
+                scene.add(rover);
+                rover.name = "rover";
+
+            }
+        );
+
+        fbxLoader.load(
+            '../../assets/3DModels/FBX/lolly.fbx',
+            (lolly) => {
+                lolly.position.set(-15, -75, 0);
+                scene.add(lolly);
+                lolly.name = "lolly";
+
+            }
+        );
+
+        ////////////////////////luces////////////////////////
+        const directionalLight = new THREE.DirectionalLight(0xFFFFFF);
+        directionalLight.position.set(30, 30, 0);
+        //scene.add(directionalLight);
+        const ambientlight = new THREE.AmbientLight();
+        scene.add(ambientlight);
+
+        ////////////////////////movement////////////////////////
+        function movis(obj1, obj2) {
+            document.onkeydown = function (e) {
+                if (e.keyCode === 37) {
+                    obj1.position.x -= 2;
+                    obj1.rotation.y = Math.PI / -2;
+                    if (obj1.position.x < -125) {
+                        obj1.position.x = -125;
+                    }
+                }
+                if (e.keyCode === 39) {
+                    obj1.position.x += 2;
+                    obj1.rotation.y = Math.PI / 2;
+                    if (obj1.position.x > 125) {
+                        obj1.position.x = 125;
+                    }
+                }
+                if (e.keyCode === 65) {
+                    obj2.position.x -= 2;
+                    obj2.rotation.y = Math.PI / -2;
+                    if (obj2.position.x < -125) {
+                        obj2.position.x = -125;
+                    }
+                }
+                if (e.keyCode === 68) {
+                    obj2.position.x += 2;
+                    obj2.rotation.y = Math.PI / 2;
+                    if (obj2.position.x > 125) {
+                        obj2.position.x = 125;
+                    }
+                }
+            }
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+            //character.rotation.x += 0.01;
+            //character.rotation.y += 0.01;
+            var rover = scene.getObjectByName('rover');
+            var lolly = scene.getObjectByName('lolly');
+            movis(rover,lolly);
+
+            var nar = scene.getObjectByName('orange');
+            var man = scene.getObjectByName('apple');
+            var pla = scene.getObjectByName('banana');
+            var cer = scene.getObjectByName('cherries');
+            var manV = scene.getObjectByName('greenapple');
+            var san = scene.getObjectByName('sandia');
+            var fre = scene.getObjectByName('fresa');
+            var per = scene.getObjectByName('pera');
+            var pin = scene.getObjectByName('pineapple');
+            nar.position.y -= 0.07;
+            man.position.y -= 0.1;
+            pla.position.y -= 0.09;
+            cer.position.y -= 0.2;
+            manV.position.y -= 0.095;
+            san.position.y -= 0.15;
+            fre.position.y -= 0.095;
+            per.position.y -= 0.04;
+            pin.position.y -= 0.2;
+
+            renderer.render(scene, camera);
+        }
+
+        animate();
+    </script>
+</body>
+
+</html>

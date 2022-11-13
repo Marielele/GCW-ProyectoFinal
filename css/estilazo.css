@@ -2,16 +2,95 @@ html {
     height: 100%;
 }
 
+:root {
+    --purple: #67597a;
+    --bone: #fef9ef;
+    --green: #719662;
+    --lightBlue: #17c3b2;
+    --yellow: #ffcb77;
+    --pink: #fe6d73;
+}
+
 body {
     overflow: hidden;
     height: 100%;
-    background: rgb(103,89,122);
-    background: -moz-linear-gradient(0deg, rgba(103,89,122,1) 0%, rgba(254,249,239,1) 100%);
-    background: -webkit-linear-gradient(0deg, rgba(103,89,122,1) 0%, rgba(254,249,239,1) 100%);
-    background: linear-gradient(0deg, rgba(103,89,122,1) 0%, rgba(254,249,239,1) 100%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Delius Unicase', cursive;
+}
+
+.backHome {
+    background: var(--purple);
+    background: -moz-linear-gradient(0deg, rgba(103, 89, 122) 0%, rgba(254,249,239,1) 100%);
+    background: -webkit-linear-gradient(0deg, rgba(103, 89, 122) 0%, rgba(254,249,239,1) 100%);
+    background: linear-gradient(0deg, rgba(103, 89, 122) 0%, rgba(254,249,239,1) 100%);
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#67597a",endColorstr="#fef9ef",GradientType=1);
+}
+
+.backGame {
+    background: var(--green);
+    background: -moz-linear-gradient(0deg, rgba(113, 150, 98) 0%, rgba(254,249,239,1) 100%);
+    background: -webkit-linear-gradient(0deg, rgba(113, 150, 98) 0%, rgba(254,249,239,1) 100%);
+    background: linear-gradient(0deg, rgba(113, 150, 98) 0%, rgba(254,249,239,1) 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#69ad60",endColorstr="#fef9ef",GradientType=1);
+}
+
+.backSettings {
+    background: var(--lightBlue);
+    background: -moz-linear-gradient(0deg, rgba(23, 195, 178) 0%, rgba(254,249,239,1) 100%);
+    background: -webkit-linear-gradient(0deg, rgba(23, 195, 178) 0%, rgba(254,249,239,1) 100%);
+    background: linear-gradient(0deg, rgba(23, 195, 178) 0%, rgba(254,249,239,1) 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#17c3b2",endColorstr="#fef9ef",GradientType=1);
+}
+
+.backPoints {
+    background: var(--yellow);
+    background: -moz-linear-gradient(0deg, rgba(255, 203, 119) 0%, rgba(254,249,239,1) 100%);
+    background: -webkit-linear-gradient(0deg, rgba(255, 203, 119) 0%, rgba(254,249,239,1) 100%);
+    background: linear-gradient(0deg, rgba(255, 203, 119) 0%, rgba(254,249,239,1) 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#ffcb77",endColorstr="#fef9ef",GradientType=1);
+}
+
+.backPink {
+    background: var(--pink);
+    background: -moz-linear-gradient(0deg, rgba(254, 109, 115) 0%, rgba(254,249,239,1) 100%);
+    background: -webkit-linear-gradient(0deg, rgba(254, 109, 115) 0%, rgba(254,249,239,1) 100%);
+    background: linear-gradient(0deg, rgba(254, 109, 115) 0%, rgba(254,249,239,1) 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#fe6d73",endColorstr="#fef9ef",GradientType=1);
+}
+
+#home{
+    background-image: url(/assets/img/backgroundWLogo.png);
+    height: 720px;
+    width: 1280px;
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
+ul {
+    list-style: none;
+    text-align: center;
+}
+
+li {
+    margin: 2rem;
+}
+
+a {
+    text-decoration: none;
+    color: white;
+    -webkit-text-stroke: 1px var(--pink);
+    padding: 12px;
+}
+
+a:hover {
+    background-image: url(/assets/img/select.png);
+    background-size: cover;
+}
+
+#listilla {
+    margin-top: 200px;
+    font-size: x-large;
+}
