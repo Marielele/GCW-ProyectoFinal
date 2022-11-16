@@ -17,11 +17,35 @@
     <div id="home">
         <ul id="listilla">
             <li><a href="game.html" id="one">Un jugador</a></li>
-            <li><a href="multiplayer.html">Dos jugadores</a></li>
-            <li><a href="score.html">Puntuaciones</a></li>
-            <li><a href="settings.html">Configuracion</a></li>
+            <li><a href="multiplayer.html" id="two">Dos jugadores</a></li>
+            <li><a href="score.html" id="three">Puntuaciones</a></li>
+            <li><a href="settings.html" id="four">Configuracion</a></li>
         </ul>
     </div>
+    <audio>
+        <source src="../assets/audio/click-21156.mp3"></source>
+        no audio
+    </audio>
+    <script>
+        var audio = document.getElementsByTagName("audio")[0];
+        var buttonGame = document.getElementById('one');
+        var buttonMulti = document.getElementById('two');
+        var buttonScore = document.getElementById('three');
+        var buttonSett = document.getElementById('four');
+
+        buttonGame.addEventListener('mouseenter', (e) => {
+            audio.play();
+        });
+        buttonMulti.addEventListener('mouseenter', (e) => {
+            audio.play();
+        });
+        buttonScore.addEventListener('mouseenter', (e) => {
+            audio.play();
+        });
+        buttonSett.addEventListener('mouseenter', (e) => {
+            audio.play();
+        });
+    </script>
 </body>
 
 </html>
