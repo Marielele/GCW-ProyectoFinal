@@ -68,6 +68,15 @@ body {
     justify-content: center;
     align-items: center;
 }
+#setting{
+    background-color: darkgoldenrod;
+    background-image: url(/assets/img/backgroundSet.png);
+    height: 720px;
+    width: 1280px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
 
 ul {
     list-style: none;
@@ -81,12 +90,28 @@ li {
 a {
     text-decoration: none;
     color: white;
-    -webkit-text-stroke: 1px var(--pink);
+    -webkit-text-stroke: 2px var(--pink);
     padding: 12px;
 }
-
+.controls{
+    height: 200px;
+    background-color: white;
+    border-width: 5px;
+    border-style: solid;
+    border-color: black;
+    border-radius: 30px;
+}
+.controlsbuttons{
+    text-decoration: none;
+    color: white;
+    -webkit-text-stroke: 2px var(--pink);
+}
 a:hover {
     background-image: url(/assets/img/select.png);
+    background-size: cover;
+}
+.selected {
+    background-color: #17c3b2;
     background-size: cover;
 }
 

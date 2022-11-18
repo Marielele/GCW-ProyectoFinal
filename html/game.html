@@ -16,7 +16,8 @@
         <h1 id="score"></h1>
     </div>
     <audio>
-        <source src="../assets/audio/stardew-valley-lofi-hip-hop-beats.mp3"></source>
+        <source src="../assets/audio/stardew-valley-lofi-hip-hop-beats.mp3">
+        </source>
         no audio
     </audio>
     <script type="module" id="lvl1">
@@ -33,6 +34,16 @@
             valOr = 2, valAp = 1, valPl = 2, valCer = 5, valGA = 1, valSa = 2, valFr = 3, valPe = 1, valPi = 2;
         var miniWindowSize = { width: 1280, height: 720 };
 
+        function getCookie(cName) {
+            const name = cName + "=";
+            const cDecoded = decodeURIComponent(document.cookie); //to be careful
+            const cArr = cDecoded.split('; ');
+            let res;
+            cArr.forEach(val => {
+                if (val.indexOf(name) === 0) res = val.substring(name.length);
+            })
+            return res;
+        }
         ////////////////////////loaders////////////////////////
         const backgroundLoader = new THREE.TextureLoader();
         const fbxLoader = new FBXLoader();
@@ -50,6 +61,8 @@
         document.body.appendChild(renderer.domElement);
         //const cameraControl = new OrbitControls(camera, renderer.domElement)
         var audio = document.getElementsByTagName("audio")[0];
+        const cookies = document.cookie
+        audio.volume = getCookie("varVolumen");
         audio.play();
 
         ////////////////////////luces////////////////////////
@@ -409,7 +422,7 @@
         animate();
 
     </script>
-    
+
 </body>
 
 </html>

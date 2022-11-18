@@ -1,14 +1,80 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <script src="/js/bootstrap.bundle.min.js"></script>
     <link rel="stylesheet" href="/css/estilazo.css">
     <link rel="shortcut icon" href="/assets/img/happy-orange_99796.ico" type="image/x-icon">
     <title>Frenzy Fruit</title>
 </head>
+
 <body class="backSettings">
-    
+    <div id="setting">
+        <ul id="listilla">
+            <li>
+            <div for="customRange2" id="prueba" style="font-size: 40px;"  class="form-label controlsbuttons">Volumen </div>
+            <input type="range" value="0"; style="height: 30px; border-radius: 30px; margin: 0px; padding-bottom: 0px;" class="form-range selected" min="0" max="1"
+                step="0.1" id="volRange">
+            
+                <div style="font-size: 40px;" class="controlsbuttons" id="two">Controles</div>
+                <div>
+                    <img class="controls" src="/assets/img/Control1.png" />
+                    <img class="controls" src="/assets/img/Control2.png" />
+                </div>
+            </li>
+            <li><a href="index.html" style="font-size: 40px;" id="three">Volver</a></li>
+        </ul>
+    </div>
+    <audio>
+        <source src="../assets/audio/click-21156.mp3">
+        </source>
+        no audio
+    </audio>
+    <script>
+         function getCookie(cName) {
+            const name = cName + "=";
+            const cDecoded = decodeURIComponent(document.cookie); //to be careful
+            const cArr = cDecoded.split('; ');
+            let res;
+            cArr.forEach(val => {
+                if (val.indexOf(name) === 0) res = val.substring(name.length);
+            })
+            return res;
+        }
+        var lvlvol = getCookie("varVolumen");
+        
+        var audio = document.getElementsByTagName("audio")[0];
+        var buttonGame = document.getElementById('one');
+        var buttonMulti = document.getElementById('two');
+        var buttonScore = document.getElementById('three');
+        var buttonSett = document.getElementById('four');
+        var volRange = document.getElementById('volRange');
+        if(lvlvol!=null){
+            volRange.value=lvlvol;
+            document.getElementById("prueba").innerHTML = "Volumen "+lvlvol*100+"%";
+        }
+        volRange.addEventListener("change", function (ev) {
+            document.cookie = `varVolumen=${encodeURIComponent(ev.currentTarget.value)}; max-age=${7 * 24 * 60 * 60}`
+            var number = ev.currentTarget.value;
+            document.getElementById("prueba").innerHTML = "Volumen "+number*100+"%";
+        }, true);
+        buttonGame.addEventListener('mouseenter', (e) => {
+            audio.play();
+        });
+        buttonMulti.addEventListener('mouseenter', (e) => {
+            audio.play();
+        });
+        buttonScore.addEventListener('mouseenter', (e) => {
+            audio.play();
+        });
+        buttonSett.addEventListener('mouseenter', (e) => {
+            audio.play();
+        });
+    </script>
 </body>
+
 </html>
