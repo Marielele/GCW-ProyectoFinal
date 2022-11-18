@@ -61,7 +61,16 @@
         document.body.appendChild(renderer.domElement);
         //const cameraControl = new OrbitControls(camera, renderer.domElement)
         var audio = document.getElementsByTagName("audio")[0];
-        const cookies = document.cookie
+
+        var selControl = getCookie("control");
+        var izq = 65;
+        var der = 68;
+        if (selControl != null) {
+            if (selControl == "flechas") {
+                izq = 37;
+                der = 39;
+            }
+        }
         audio.volume = getCookie("varVolumen");
         audio.play();
 
@@ -235,6 +244,7 @@
 
         ////////////////////////movement////////////////////////
         function movis(obj1, time) {
+
             document.onkeydown = function (e) {
                 let key = e.keyCode;
                 switch (key) {
@@ -242,7 +252,7 @@
                         pausa = true;
                         alert('pausa');
                         break;
-                    case 65:
+                    case izq:
                         obj1.position.x -= 3;
                         player.position.x -= 3;
                         if (obj1.position.x < -125) {
@@ -250,7 +260,7 @@
                             player.position.x = -125;
                         }
                         break;
-                    case 68:
+                    case der:
                         obj1.position.x += 3;
                         player.position.x += 3;
                         if (obj1.position.x > 125) {

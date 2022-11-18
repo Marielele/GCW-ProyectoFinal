@@ -16,14 +16,16 @@
     <div id="setting">
         <ul id="listilla">
             <li>
-            <div for="customRange2" id="prueba" style="font-size: 40px;"  class="form-label controlsbuttons">Volumen </div>
-            <input type="range" value="0"; style="height: 30px; border-radius: 30px; margin: 0px; padding-bottom: 0px;" class="form-range selected" min="0" max="1"
-                step="0.1" id="volRange">
-            
+                <div for="customRange2" id="prueba" style="font-size: 40px;" class="form-label controlsbuttons">Volumen
+                </div>
+                <input type="range" value="0" ;
+                    style="height: 30px; border-radius: 30px; margin: 0px; padding-bottom: 0px;"
+                    class="form-range selected" min="0" max="1" step="0.1" id="volRange">
+
                 <div style="font-size: 40px;" class="controlsbuttons" id="two">Controles</div>
                 <div>
-                    <img class="controls" src="/assets/img/Control1.png" />
-                    <img class="controls" src="/assets/img/Control2.png" />
+                    <img class="controls" id="btnletras" type="button" src="/assets/img/Control3.png" />
+                    <img class="controls" id="btnflechas" type="button" src="/assets/img/Control4.png" />
                 </div>
             </li>
             <li><a href="index.html" style="font-size: 40px;" id="three">Volver</a></li>
@@ -35,7 +37,7 @@
         no audio
     </audio>
     <script>
-         function getCookie(cName) {
+        function getCookie(cName) {
             const name = cName + "=";
             const cDecoded = decodeURIComponent(document.cookie); //to be careful
             const cArr = cDecoded.split('; ');
@@ -46,21 +48,44 @@
             return res;
         }
         var lvlvol = getCookie("varVolumen");
-        
+        var selControl = getCookie("control");
+
         var audio = document.getElementsByTagName("audio")[0];
         var buttonGame = document.getElementById('one');
         var buttonMulti = document.getElementById('two');
         var buttonScore = document.getElementById('three');
         var buttonSett = document.getElementById('four');
+        var btnlet = document.getElementById('btnletras');
+        var btnfle = document.getElementById('btnflechas');
         var volRange = document.getElementById('volRange');
-        if(lvlvol!=null){
-            volRange.value=lvlvol;
-            document.getElementById("prueba").innerHTML = "Volumen "+lvlvol*100+"%";
+        if (lvlvol != null) {
+            volRange.value = lvlvol;
+            document.getElementById("prueba").innerHTML = "Volumen " + lvlvol * 100 + "%";
         }
+        if (selControl != null) {
+            if (selControl == "letras") {
+                btnlet.style.backgroundColor = 'yellow';
+                btnfle.style.backgroundColor = 'white';
+            }
+            if (selControl == "flechas") {
+                btnfle.style.backgroundColor = 'yellow';
+                btnlet.style.backgroundColor = 'white';
+            }
+        }
+        btnlet.addEventListener("click", () => {
+            btnlet.style.backgroundColor = 'yellow';
+            btnfle.style.backgroundColor = 'white';
+            document.cookie = `control=${encodeURIComponent("letras")}; max-age=${7 * 24 * 60 * 60}`
+        })
+        btnfle.addEventListener("click", () => {
+            btnfle.style.backgroundColor = 'yellow';
+            btnlet.style.backgroundColor = 'white';
+            document.cookie = `control=${encodeURIComponent("flechas")}; max-age=${7 * 24 * 60 * 60}`
+        })
         volRange.addEventListener("change", function (ev) {
             document.cookie = `varVolumen=${encodeURIComponent(ev.currentTarget.value)}; max-age=${7 * 24 * 60 * 60}`
             var number = ev.currentTarget.value;
-            document.getElementById("prueba").innerHTML = "Volumen "+number*100+"%";
+            document.getElementById("prueba").innerHTML = "Volumen " + number * 100 + "%";
         }, true);
         buttonGame.addEventListener('mouseenter', (e) => {
             audio.play();
