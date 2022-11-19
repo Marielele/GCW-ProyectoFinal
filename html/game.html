@@ -28,7 +28,7 @@
 
         ////////////////////////variables////////////////////////
         var clock, deltaTime;
-        var right1=false,left1=false,right2=false,left2=false;
+        var right1 = false, left1 = false, right2 = false, left2 = false;
         let playerBB, appleBB, orangeBB, melonBB, bananaBB, strawberryBB, pearBB,
             redAppleBB, cherriesBB, pinneapleBB;
         let puntos = 0, vidas = 5, pausa = false,
@@ -244,25 +244,28 @@
         //scene.add(box);
 
         ////////////////////////movement////////////////////////
- 
 
         function movis(obj1, obj2) {
             document.onkeydown = function (e) {
+                if (e.keyCode === 27) {
+                    pausa = true;
+                    alert('pausa');
+                }
                 if (e.keyCode === izq) {
                     obj1.rotation.y = Math.PI / -2;
-                    left1=true;
+                    left1 = true;
                 }
                 if (e.keyCode === der) {
                     obj1.rotation.y = Math.PI / 2;
-                    right1=true;
+                    right1 = true;
                 }
             }
             document.onkeyup = function (e) {
                 if (e.keyCode === izq) {
-                    left1=false;
+                    left1 = false;
                 }
                 if (e.keyCode === der) {
-                    right1=false;
+                    right1 = false;
                 }
             }
         }
@@ -402,18 +405,18 @@
             strawberryBB.copy(fruitF.geometry.boundingBox).applyMatrix4(fruitF.matrixWorld);
             pearBB.copy(fruitPe.geometry.boundingBox).applyMatrix4(fruitPe.matrixWorld);
             pinneapleBB.copy(fruitPi.geometry.boundingBox).applyMatrix4(fruitPi.matrixWorld);
-            if (left1==true) {
+            if (left1 == true) {
                 rover.position.x -= 1;
-                    if (rover.position.x < -125) {                  
-                        rover.position.x = -125;
-                    }
+                if (rover.position.x < -125) {
+                    rover.position.x = -125;
                 }
-                if (right1==true) {
-                    rover.position.x += 1;
-                    if (rover.position.x > 125) {
-                        rover.position.x = 125;
-                    }
+            }
+            if (right1 == true) {
+                rover.position.x += 1;
+                if (rover.position.x > 125) {
+                    rover.position.x = 125;
                 }
+            }
             checkCollisions();
             score();
             renderer.render(scene, camera);
