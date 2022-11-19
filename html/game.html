@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/css/estilazo.css">
     <link rel="shortcut icon" href="/assets/img/happy-orange_99796.ico" type="image/x-icon">
-    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="/js/sweetalert.js"></script>
     <title>Frenzy Fruit</title>
 </head>
 
@@ -249,7 +249,11 @@
             document.onkeydown = function (e) {
                 if (e.keyCode === 27) {
                     pausa = true;
-                    alert('pausa');
+                    Swal.fire({
+                        title: 'Pausa',
+                        icon: 'info',
+                        confirmButtonText: 'Continuar'
+                    })
                 }
                 if (e.keyCode === izq) {
                     obj1.rotation.y = Math.PI / -2;
