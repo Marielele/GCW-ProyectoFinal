@@ -256,11 +256,9 @@
                     })
                 }
                 if (e.keyCode === izq) {
-                    obj1.rotation.y = Math.PI / -2;
                     left1 = true;
                 }
                 if (e.keyCode === der) {
-                    obj1.rotation.y = Math.PI / 2;
                     right1 = true;
                 }
             }
@@ -411,14 +409,18 @@
             pinneapleBB.copy(fruitPi.geometry.boundingBox).applyMatrix4(fruitPi.matrixWorld);
             if (left1 == true) {
                 rover.position.x -= 1;
+                player.position.x -= 1;
                 if (rover.position.x < -125) {
                     rover.position.x = -125;
+                    player.position.x = -125;
                 }
             }
             if (right1 == true) {
                 rover.position.x += 1;
+                player.position.x += 1;
                 if (rover.position.x > 125) {
                     rover.position.x = 125;
+                    player.position.x = 125;
                 }
             }
             checkCollisions();

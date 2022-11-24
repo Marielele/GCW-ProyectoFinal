@@ -10,20 +10,23 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Delius+Unicase:wght@700&display=swap" rel="stylesheet">
+    <script src="/js/sweetalert.js"></script>
+    <script src="https://kit.fontawesome.com/89f32dc1fd.js" crossorigin="anonymous"></script>
     <title>Frenzy Fruit</title>
 </head>
 
 <body class="backHome">
     <div id="home">
         <ul id="listilla">
-            <li><a href="game.html" id="one">Un jugador</a></li>
-            <li><a href="multiplayer.html" id="two">Dos jugadores</a></li>
-            <li><a href="score.html" id="three">Puntuaciones</a></li>
-            <li><a href="settings.html" id="four">Configuracion</a></li>
+            <li><button class="btnCute" id="one" onclick="gpModes(1);">Un jugador</button></li>
+            <li><button class="btnCute" id="two" onclick="gpModes(2);">Dos jugadores</button></li>
+            <li><button class="btnCute" id="three" onclick="window.location='score.html';">Puntuaciones</button></li>
+            <li><button class="btnCute" id="four" onclick="window.location='settings.html';">Configuracion</button></li>
         </ul>
     </div>
     <audio>
-        <source src="../assets/audio/click-21156.mp3"></source>
+        <source src="../assets/audio/click-21156.mp3">
+        </source>
         no audio
     </audio>
     <script>
@@ -45,6 +48,154 @@
         buttonSett.addEventListener('mouseenter', (e) => {
             audio.play();
         });
+
+        function gpModes(op) {
+            switch (op) {
+                case 1:
+                    Swal.fire({
+                        title: 'Modos de juego',
+                        showCloseButton: true,
+                        showDenyButton: true,
+                        confirmButtonText: '<i class="fa-solid fa-apple-whole"></i> Atrapa las frutas',
+                        denyButtonText: `<i class="fa-solid fa-bomb"></i> Esquiva las bombas`,
+                        confirmButtonColor: '#69ad60',
+                        denyButtonColor: '#fe6d73',
+                        padding: '3em',
+                        background: '#fff url(/assets/img/patternbackgroundcute.jpg)',
+                        backdrop: `rgba(103,89,122,0.4)`
+                    }).then((result) => {
+
+                        if (result.isConfirmed) {
+
+                            (async () => {
+                                const inputOptions = new Promise((resolve) => {
+                                    setTimeout(() => {
+                                        resolve({
+                                            'Bosque': 'Bosque',
+                                            'Playa': 'Playa',
+                                            'Undefined': 'Undefined'
+                                        })
+                                    }, 1000)
+                                })
+
+                                const { value: mapa } = await Swal.fire({
+                                    title: 'Mapas',
+                                    padding: '3em',
+                                    background: '#fff url(/assets/img/patternbackgroundcute.jpg)',
+                                    backdrop: `rgba(103,89,122,0.4)`,
+                                    confirmButtonColor: '#69ad60',
+                                    input: 'radio',
+                                    inputOptions: inputOptions,
+                                    inputValidator: (value) => {
+                                        if (!value) {
+                                            return 'Escoje un mapa'
+                                        }
+                                    }
+                                })
+
+                                switch (mapa) {
+                                    case 'Bosque':
+                                        window.location = "/html/game.html"
+                                        break;
+                                    case 'Playa':
+                                        Swal.fire({ html: `playa aun no disponible` })
+                                        break;
+                                    case 'Undefined':
+                                        Swal.fire({ html: `aun no disponible` })
+                                        break;
+                                }
+
+                            })()
+
+                        } else if (result.isDenied) {
+
+                        }
+                    })
+                    break;
+                case 2:
+                    Swal.fire({
+                        title: 'Salas',
+                        showCloseButton: true,
+                        showDenyButton: true,
+                        confirmButtonText: '<i class="fa-solid fa-plus"></i> Crea una sala',
+                        denyButtonText: `<i class="fa-solid fa-person-through-window"></i> Unirse a una sala`,
+                        confirmButtonColor: '#69ad60',
+                        denyButtonColor: '#fe6d73',
+                        padding: '3em',
+                        background: '#fff url(/assets/img/patternbackgroundcute.jpg)',
+                        backdrop: `rgba(103,89,122,0.4)`
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            let nSala = Math.floor(Math.random() * 1000) + 1;
+                            (async () => {
+                                const inputOptions = new Promise((resolve) => {
+                                    setTimeout(() => {
+                                        resolve({
+                                            'Bosque': 'Bosque',
+                                            'Playa': 'Playa',
+                                            'Undefined': 'Undefined'
+                                        })
+                                    }, 1000)
+                                })
+
+                                const { value: mapa } = await Swal.fire({
+                                    title: `Sala #${nSala}`,
+                                    padding: '3em',
+                                    background: '#fff url(/assets/img/patternbackgroundcute.jpg)',
+                                    backdrop: `rgba(103,89,122,0.4)`,
+                                    confirmButtonColor: '#69ad60',
+                                    confirmButtonText: 'Crear',
+                                    input: 'radio',
+                                    inputOptions: inputOptions,
+                                    inputValidator: (value) => {
+                                        if (!value) {
+                                            return 'Escoje un mapa'
+                                        }
+                                    }
+                                })
+
+                                switch (mapa) {
+                                    case 'Bosque':
+                                        window.location = "/html/multiplayer.html"
+                                        break;
+                                    case 'Playa':
+                                        Swal.fire({ html: `playa aun no disponible` })
+                                        break;
+                                    case 'Undefined':
+                                        Swal.fire({ html: `aun no disponible` })
+                                        break;
+                                }
+
+                            })()
+
+                        } else if (result.isDenied) {
+
+                            (async () => {
+                                const { value: room } = await Swal.fire({
+                                    title: 'Ingresa numero de sala',
+                                    confirmButtonText: 'Entrar',
+                                    input: 'text',
+                                    confirmButtonColor: '#69ad60',
+                                    padding: '3em',
+                                    background: '#fff url(/assets/img/patternbackgroundcute.jpg)',
+                                    backdrop: `rgba(103,89,122,0.4)`,
+                                    inputValidator: (value) => {
+                                        if (!value) {
+                                            return 'Escribe el numero de la sala'
+                                        } else {
+                                            window.location = "/html/multiplayer.html"
+                                        }
+                                    }
+                                })
+                                //Conexion base de datos para verificar si existe la sala o ya esta llena
+                            })()
+
+                        }
+                    })
+                    break;
+
+            }
+        }
     </script>
 </body>
 
