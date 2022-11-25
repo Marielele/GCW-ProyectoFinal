@@ -73,19 +73,24 @@
                                         resolve({
                                             'Bosque': 'Bosque',
                                             'Playa': 'Playa',
-                                            'Undefined': 'Undefined'
+                                            'Jungla': 'Jungla'
                                         })
                                     }, 1000)
                                 })
 
                                 const { value: mapa } = await Swal.fire({
-                                    title: 'Mapas',
+                                    title: 'Escoje mapa y dificultad',
                                     padding: '3em',
                                     background: '#fff url(/assets/img/patternbackgroundcute.jpg)',
                                     backdrop: `rgba(103,89,122,0.4)`,
                                     confirmButtonColor: '#69ad60',
                                     input: 'radio',
                                     inputOptions: inputOptions,
+                                    html:
+                                        '<select id="selectlvl" class="swal2-select cuteFont">' +
+                                        '<option value="facil">Facil</option>' +
+                                        '<option value="medio">Intermedio</option>' +
+                                        '</select>',
                                     inputValidator: (value) => {
                                         if (!value) {
                                             return 'Escoje un mapa'
@@ -93,15 +98,24 @@
                                     }
                                 })
 
+                                let select = document.getElementById('selectlvl');
+                                let selectedOp = select.options[select.selectedIndex];
+
                                 switch (mapa) {
                                     case 'Bosque':
-                                        window.location = "/html/game.html"
+                                        localStorage.setItem('mapa', mapa);
+                                        localStorage.setItem('dificultad', selectedOp.value);
+                                        window.location = "/html/game.html";
                                         break;
                                     case 'Playa':
-                                        Swal.fire({ html: `playa aun no disponible` })
+                                        localStorage.setItem('mapa', mapa);
+                                        localStorage.setItem('dificultad', selectedOp.value);
+                                        window.location = "/html/game.html";
                                         break;
-                                    case 'Undefined':
-                                        Swal.fire({ html: `aun no disponible` })
+                                    case 'Jungla':
+                                        localStorage.setItem('mapa', mapa);
+                                        localStorage.setItem('dificultad', selectedOp.value);
+                                        window.location = "/html/game.html";
                                         break;
                                 }
 

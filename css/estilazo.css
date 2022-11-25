@@ -165,3 +165,7 @@ a:hover {
 	flex-direction: column;
     background-color: #8d474700 !important;
 }
+
+.cuteFont {
+    font-family: 'Delius Unicase', cursive;
+}

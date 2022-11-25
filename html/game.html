@@ -11,7 +11,7 @@
     <title>Frenzy Fruit</title>
 </head>
 
-<body class="backGame">
+<body id="body" class="backGame">
     <div id="container">
         <h1 id="score"></h1>
     </div>
@@ -34,10 +34,18 @@
         var right1 = false, left1 = false, right2 = false, left2 = false;
         let playerBB, appleBB, orangeBB, melonBB, bananaBB, strawberryBB, pearBB,
             redAppleBB, cherriesBB, pinneapleBB, peelBB, cookieBB, heartBB, converseBB;
-        let puntos = 0, vidas = 3, pausa = false, playerSpeed = 100,
-            valOr = 2, valAp = 1, valPl = 2, valCer = 5, valGA = 1, valSa = 2, valFr = 3, valPe = 1, valPi = 2;
+        let puntos = 0, vidas = 3, pausa = false, playerSpeed = 100, speed, trashSpeed, mapFruit,
+            valOr = 2, valAp = 1, valPl = 2, valCer = 5, valGA = 8, valSa = 2, valFr = 3, valPe = 1, valPi = 2;
         var miniWindowSize = { width: 1280, height: 720 };
-        var speed = 25;
+        let level = localStorage.getItem('dificultad');
+        let mapa = localStorage.getItem('mapa');
+        if (level == 'facil') {
+            speed = 25;
+            trashSpeed = 35;
+        } else {
+            speed = 40;
+            trashSpeed = 50;
+        }
 
         function getCookie(cName) {
             const name = cName + "=";
@@ -58,7 +66,23 @@
         ////////////////////////setup scene////////////////////////
         clock = new THREE.Clock();
         const scene = new THREE.Scene();
-        scene.background = backgroundLoader.load('../assets/img/5315420.jpg');
+        switch (mapa) {
+            case 'Bosque':
+                scene.background = backgroundLoader.load('../assets/img/5315420.jpg');
+                mapFruit = '../../assets/3DModels/GLB/manzanaVerdeG.glb';
+                break;
+            case 'Playa':
+                scene.background = backgroundLoader.load('../assets/img/11902.jpg');
+                document.getElementById('body').classList.toggle('backSettings');
+                mapFruit = '../../assets/3DModels/GLB/coco.glb'
+                break;
+            case 'Jungla':
+                scene.background = backgroundLoader.load('../assets/img/5348829.jpg');
+                document.getElementById('body').classList.toggle('backPink');
+                mapFruit = '../../assets/3DModels/GLB/kiwi.glb'
+                break;
+
+        }
         const camera = new THREE.PerspectiveCamera(50, miniWindowSize.width / miniWindowSize.height);
         camera.position.set(0, 0, 180);
 
@@ -153,13 +177,12 @@
             }
         );
 
-        var fruitGA = fruitO.clone();
+        var fruitGA = fruitO.clone(); // fruta de mapa
         fruitGA.position.set(40, 225, 7);
         scene.add(fruitGA);
         appleBB = new THREE.Box3();
         appleBB.setFromObject(fruitGA);
-        gltfLoader.load(
-            '../../assets/3DModels/GLB/manzanaVerdeG.glb',
+        gltfLoader.load(mapFruit,
             function (gltf) {
                 let greenapple = gltf.scene;
                 greenapple.position.set(40, 220, 7);
@@ -480,7 +503,7 @@
         }
 
         function isPaused() {
-            pausa ? stopAnimation() : console.log('nel')
+            pausa ? stopAnimation() : console.log('')
         }
 
         function isDead() {
@@ -532,8 +555,8 @@
             var heart = scene.getObjectByName('heart');
 
 
-            trash.position.y -= 35 * deltaTime;
-            peel.position.y -= 35 * deltaTime;
+            trash.position.y -= trashSpeed * deltaTime;
+            peel.position.y -= trashSpeed * deltaTime;
             nar.position.y -= speed * deltaTime;
             fruitO.position.y -= speed * deltaTime;
             man.position.y -= speed * deltaTime;
