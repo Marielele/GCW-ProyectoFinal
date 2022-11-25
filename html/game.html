@@ -15,6 +15,9 @@
     <div id="container">
         <h1 id="score"></h1>
     </div>
+    <div id="container2">
+        <h1 id="lifes"></h1>
+    </div>
     <audio>
         <source src="../assets/audio/stardew-valley-lofi-hip-hop-beats.mp3">
         </source>
@@ -27,13 +30,14 @@
         import { FBXLoader } from "../js/threejs/FBXLoader.js";
 
         ////////////////////////variables////////////////////////
-        var clock, deltaTime;
+        var clock, deltaTime = 0, requestID;
         var right1 = false, left1 = false, right2 = false, left2 = false;
         let playerBB, appleBB, orangeBB, melonBB, bananaBB, strawberryBB, pearBB,
-            redAppleBB, cherriesBB, pinneapleBB;
-        let puntos = 0, vidas = 5, pausa = false,
+            redAppleBB, cherriesBB, pinneapleBB, peelBB, cookieBB, heartBB, converseBB;
+        let puntos = 0, vidas = 3, pausa = false, playerSpeed = 100,
             valOr = 2, valAp = 1, valPl = 2, valCer = 5, valGA = 1, valSa = 2, valFr = 3, valPe = 1, valPi = 2;
         var miniWindowSize = { width: 1280, height: 720 };
+        var speed = 25;
 
         function getCookie(cName) {
             const name = cName + "=";
@@ -45,6 +49,7 @@
             })
             return res;
         }
+
         ////////////////////////loaders////////////////////////
         const backgroundLoader = new THREE.TextureLoader();
         const fbxLoader = new FBXLoader();
@@ -223,6 +228,68 @@
             }
         );
 
+        var peel = fruitO.clone();
+        peel.position.set(0, 505, 7);
+        scene.add(peel);
+        peelBB = new THREE.Box3();
+        peelBB.setFromObject(peel);
+        gltfLoader.load(
+            '../../assets/3DModels/GLB/trash.glb',
+            function (gltf) {
+                let trash = gltf.scene;
+                trash.position.set(0, 500, 7);
+                scene.add(trash);
+                trash.name = 'trash';
+            }
+        );
+
+        ////// Items //////
+        var converseItem = fruitO.clone();
+        converseItem.position.set(100, 3605, 7);
+        scene.add(converseItem);
+        converseBB = new THREE.Box3();
+        converseBB.setFromObject(converseItem);
+        gltfLoader.load(
+            '../../assets/3DModels/GLB/converse.glb',
+            function (gltf) {
+                let converse = gltf.scene;
+                converse.position.set(100, 3600, 7);
+                converse.rotation.y = Math.PI / 2;
+                scene.add(converse);
+                converse.name = 'converse';
+            }
+        );
+
+        var cookieItem = fruitO.clone();
+        cookieItem.position.set(-100, 2505, 7);
+        scene.add(cookieItem);
+        cookieBB = new THREE.Box3();
+        cookieBB.setFromObject(cookieItem);
+        gltfLoader.load(
+            '../../assets/3DModels/GLB/cookie.glb',
+            function (gltf) {
+                let cookie = gltf.scene;
+                cookie.position.set(-100, 2500, 7);
+                scene.add(cookie);
+                cookie.name = 'cookie';
+            }
+        );
+
+        var heartItem = fruitO.clone();
+        heartItem.position.set(0, 1105, 7);
+        scene.add(heartItem);
+        heartBB = new THREE.Box3();
+        heartBB.setFromObject(heartItem);
+        gltfLoader.load(
+            '../../assets/3DModels/GLB/heart.glb',
+            function (gltf) {
+                let heart = gltf.scene;
+                heart.position.set(0, 1100, 7);
+                scene.add(heart);
+                heart.name = 'heart';
+            }
+        );
+
         ////// Player //////
         fbxLoader.load(
             '../../assets/3DModels/FBX/rover.fbx',
@@ -252,7 +319,15 @@
                     Swal.fire({
                         title: 'Pausa',
                         icon: 'info',
-                        confirmButtonText: 'Continuar'
+                        confirmButtonColor: '#69ad60',
+                        confirmButtonText: 'Continuar',
+                        padding: '3em',
+                        background: '#fff url(/assets/img/patternbackgroundcute.jpg)',
+                        backdrop: `rgba(113,150,98,0.4)`
+                    }).then((result) => {
+                        if (result.isConfirmed || result.dismiss) {
+                            pausa = false;
+                        }
                     })
                 }
                 if (e.keyCode === izq) {
@@ -282,6 +357,10 @@
             var fre = scene.getObjectByName('fresa');
             var per = scene.getObjectByName('pera');
             var pin = scene.getObjectByName('pineapple');
+            var trash = scene.getObjectByName('trash');
+            var converse = scene.getObjectByName('converse');
+            var cookie = scene.getObjectByName('cookie');
+            var heart = scene.getObjectByName('heart');
 
             if (playerBB.containsBox(orangeBB)) { //naranja
                 restart(nar, fruitO, true);
@@ -328,12 +407,33 @@
                 puntos = puntos + valPi;
             } else if (fruitPi.position.y < -100) {
                 restart(pin, fruitPi, true);
+            } else if (playerBB.intersectsBox(peelBB)) { //cascara de platano
+                restart(trash, peel, true);
+                vidas = vidas - 1;
+            } else if (peel.position.y < -100) {
+                restart(trash, peel, true);
+            } else if (playerBB.containsBox(converseBB)) { //item velocidad
+                restartItem(converse, converseItem, true);
+                playerSpeed = playerSpeed + 10;
+            } else if (converseItem.position.y < -100) {
+                restartItem(converse, converseItem, true);
+            } else if (playerBB.containsBox(cookieBB)) { //item multiplicador
+                restartItem(cookie, cookieItem, true);
+                puntos = puntos * 2;
+            } else if (cookieItem.position.y < -100) {
+                restartItem(cookie, cookieItem, true);
+            } else if (playerBB.containsBox(heartBB)) { //item vida
+                restartItem(heart, heartItem, true);
+                vidas = vidas + 1;
+            } else if (heartItem.position.y < -100) {
+                restartItem(heart, heartItem, true);
             }
         }
 
         function restart(fruta, cubo, iscub) {
-            let rand = randomize(241, 120);
-            let rand2 = (Math.random() * 400) + 100;
+            let rand = randomize(241, 120, 1);
+            //let rand2 = (Math.random() * 400) + 100;
+            let rand2 = randomize(500, 110, 2);
             if (iscub != true) {
                 cubo.position.set(rand, rand2, 7);
                 fruta.position.set(rand, rand2, 7);
@@ -343,21 +443,77 @@
             }
         }
 
-        function randomize(max, min) {
-            let value = Math.floor(Math.random() * max) - min;
-            let val = Math.round(value);
-            return val;
+        function restartItem(item, bb, iscub) {
+            let rand = randomize(241, 120, 1);
+            //let rand2 = (Math.random() * 400) + 100;
+            let rand2 = randomize(1200, 1000, 2);
+            if (iscub != true) {
+                bb.position.set(rand, rand2, 7);
+                item.position.set(rand, rand2, 7);
+            } else {
+                bb.position.set(rand, rand2 + 5, 7);
+                item.position.set(rand, rand2, 7);
+            }
+        }
+
+        function randomize(max, min, op) {
+            let value;
+            switch (op) {
+                case 1: // Numeros negativos y positivos entre los rangos de min y max 
+                    value = Math.floor(Math.random() * max) - min;
+                    break;
+                case 2: // Numeros entre 2 valores positivos
+                    value = Math.floor(Math.random() * (max - min) + min);
+                    break;
+            }
+            return value;
         }
 
         function score() {
             let scoreData = document.getElementById('score');
-            scoreData.innerHTML = puntos;
+            scoreData.innerHTML = 'Puntos: ' + puntos;
+        }
+
+        function lifes() {
+            let scoreData = document.getElementById('lifes');
+            scoreData.innerHTML = 'Vidas: ' + vidas;
+        }
+
+        function isPaused() {
+            pausa ? stopAnimation() : console.log('nel')
+        }
+
+        function isDead() {
+            if (vidas == 0) {
+                stopAnimation();
+                Swal.fire({
+                    title: 'Juego terminado',
+                    text: `Tu puntuacion final es: ${puntos}`,
+                    confirmButtonColor: '#69ad60',
+                    confirmButtonText: 'Volver a jugar',
+                    showCancelButton: true,
+                    cancelButtonColor: '#fe6d73',
+                    cancelButtonText: 'Compartir puntuacion',
+                    padding: '3em',
+                    background: '#fff url(/assets/img/patternbackgroundcute.jpg)',
+                    backdrop: `rgba(113,150,98,0.4)`
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.location.reload();
+                    } else if (result.isDenied) {
+
+                    } else if (result.dismiss) {
+                        window.location = "/html/index.html"
+                    }
+                })
+            }
         }
 
         ////////////////////////render////////////////////////
         function animate() {
-            requestAnimationFrame(animate);
+            requestID = requestAnimationFrame(animate);
             deltaTime = clock.getDelta();
+            const timer = 0.0001 * Date.now();
             var rover = scene.getObjectByName('rover');
             movis(rover, deltaTime);
             playerBB.copy(player.geometry.boundingBox).applyMatrix4(player.matrixWorld);
@@ -370,33 +526,38 @@
             var fre = scene.getObjectByName('fresa');
             var per = scene.getObjectByName('pera');
             var pin = scene.getObjectByName('pineapple');
-            let randOra = (Math.random() * (0.25 - 0.05) + 0.05).toFixed(3);
-            nar.position.y -= randOra;
-            fruitO.position.y -= randOra;
-            let randMan = (Math.random() * (0.25 - 0.05) + 0.05).toFixed(3);
-            man.position.y -= randMan;
-            fruitA.position.y -= randMan;
-            let randBan = (Math.random() * (0.25 - 0.05) + 0.05).toFixed(3);
-            pla.position.y -= randBan;
-            fruitB.position.y -= randBan;
-            let randChe = (Math.random() * (0.25 - 0.05) + 0.05).toFixed(3);
-            cer.position.y -= randChe;
-            fruitC.position.y -= randChe;
-            let randGA = (Math.random() * (0.25 - 0.05) + 0.05).toFixed(3);
-            manV.position.y -= randGA;
-            fruitGA.position.y -= randGA;
-            let randS = (Math.random() * (0.25 - 0.05) + 0.05).toFixed(3);
-            san.position.y -= randS;
-            fruitS.position.y -= randS;
-            let randF = (Math.random() * (0.25 - 0.05) + 0.05).toFixed(3);
-            fre.position.y -= randF;
-            fruitF.position.y -= randF;
-            let randPer = (Math.random() * (0.25 - 0.05) + 0.05).toFixed(3);
-            per.position.y -= randPer;
-            fruitPe.position.y -= randPer;
-            let randPin = (Math.random() * (0.25 - 0.05) + 0.05).toFixed(3);
-            pin.position.y -= randPin;
-            fruitPi.position.y -= randPin;
+            var trash = scene.getObjectByName('trash');
+            var converse = scene.getObjectByName('converse');
+            var cookie = scene.getObjectByName('cookie');
+            var heart = scene.getObjectByName('heart');
+
+
+            trash.position.y -= 35 * deltaTime;
+            peel.position.y -= 35 * deltaTime;
+            nar.position.y -= speed * deltaTime;
+            fruitO.position.y -= speed * deltaTime;
+            man.position.y -= speed * deltaTime;
+            fruitA.position.y -= speed * deltaTime;
+            pla.position.y -= speed * deltaTime;
+            fruitB.position.y -= speed * deltaTime;
+            cer.position.y -= speed * deltaTime;
+            fruitC.position.y -= speed * deltaTime;
+            manV.position.y -= speed * deltaTime;
+            fruitGA.position.y -= speed * deltaTime;
+            san.position.y -= speed * deltaTime;
+            fruitS.position.y -= speed * deltaTime;
+            fre.position.y -= speed * deltaTime;
+            fruitF.position.y -= speed * deltaTime;
+            per.position.y -= speed * deltaTime;
+            fruitPe.position.y -= speed * deltaTime;
+            pin.position.y -= speed * deltaTime;
+            fruitPi.position.y -= speed * deltaTime;
+            converse.position.y -= speed * deltaTime;
+            converseItem.position.y -= speed * deltaTime;
+            heart.position.y -= speed * deltaTime;
+            heartItem.position.y -= speed * deltaTime;
+            cookie.position.y -= speed * deltaTime;
+            cookieItem.position.y -= speed * deltaTime;
 
             orangeBB.copy(fruitO.geometry.boundingBox).applyMatrix4(fruitO.matrixWorld);
             redAppleBB.copy(fruitA.geometry.boundingBox).applyMatrix4(fruitA.matrixWorld);
@@ -407,17 +568,22 @@
             strawberryBB.copy(fruitF.geometry.boundingBox).applyMatrix4(fruitF.matrixWorld);
             pearBB.copy(fruitPe.geometry.boundingBox).applyMatrix4(fruitPe.matrixWorld);
             pinneapleBB.copy(fruitPi.geometry.boundingBox).applyMatrix4(fruitPi.matrixWorld);
+            peelBB.copy(peel.geometry.boundingBox).applyMatrix4(peel.matrixWorld);
+            converseBB.copy(converseItem.geometry.boundingBox).applyMatrix4(converseItem.matrixWorld);
+            cookieBB.copy(cookieItem.geometry.boundingBox).applyMatrix4(cookieItem.matrixWorld);
+            heartBB.copy(heartItem.geometry.boundingBox).applyMatrix4(heartItem.matrixWorld);
+
             if (left1 == true) {
-                rover.position.x -= 1;
-                player.position.x -= 1;
+                rover.position.x -= playerSpeed * deltaTime;
+                player.position.x -= playerSpeed * deltaTime;
                 if (rover.position.x < -125) {
                     rover.position.x = -125;
                     player.position.x = -125;
                 }
             }
             if (right1 == true) {
-                rover.position.x += 1;
-                player.position.x += 1;
+                rover.position.x += playerSpeed * deltaTime;
+                player.position.x += playerSpeed * deltaTime;
                 if (rover.position.x > 125) {
                     rover.position.x = 125;
                     player.position.x = 125;
@@ -425,8 +591,16 @@
             }
             checkCollisions();
             score();
+            lifes();
+            isPaused();
+            isDead();
             renderer.render(scene, camera);
         }
+
+        function stopAnimation() {
+            cancelAnimationFrame(requestID);
+        }
+
         animate();
 
     </script>

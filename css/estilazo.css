@@ -134,6 +134,18 @@ a:hover {
     text-align: end;
 }
 
+#container2 {
+    position: absolute;
+    width: 1280px;
+    height: 720px;
+}
+
+#lifes {
+    color: var(--pink);
+    font-size: 50px;
+    margin: 20px;
+}
+
 .btnCute {
     background: none;
     border: 0;
