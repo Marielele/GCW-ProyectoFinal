@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/estilazo.css">
+    <link rel="shortcut icon" href="/assets/img/happy-orange_99796.ico" type="image/x-icon">
+    <script src="/js/sweetalert.js"></script>
+    <title>Frenzy Fruit</title>
+</head>
+
+<body id="body" class="backGame">
+    <div id="container">
+        <h1 id="score"></h1>
+    </div>
+    <div id="container2">
+        <h1 id="lifes"></h1>
+    </div>
+    <audio>
+        <source src="../assets/audio/twitch-safe-animal-crossing-lofi-chill-hop-mix (mp3cut.net).mp3">
+        </source>
+        no audio
+    </audio>
+    <script type="module" id="lvl1">
+        import * as THREE from "../js/threejs/three.module.js";
+        import { GLTFLoader } from "../js/threejs/GLTFLoader.js";
+        import { FBXLoader } from "../js/threejs/FBXLoader.js";
+
+        ////////////////////////variables////////////////////////
+        var clock, deltaTime = 0, requestID;
+        var right1 = false, left1 = false, right2 = false, left2 = false;
+        let playerBB, bombBB, bomb2BB, bomb3BB, bomb4BB, bomb5BB, bomb6BB, bomb7BB, bomb8BB, bomb9BB;
+        let puntos = 0, pausa = false, playerSpeed = 100, speed, valOr = 2;
+        var miniWindowSize = { width: 1280, height: 720 };
+        let level = localStorage.getItem('dificultad');
+        if (level == 'facil') {
+            speed = 25;
+        } else {
+            speed = 40;
+        }
+
+        function getCookie(cName) {
+            const name = cName + "=";
+            const cDecoded = decodeURIComponent(document.cookie); //to be careful
+            const cArr = cDecoded.split('; ');
+            let res;
+            cArr.forEach(val => {
+                if (val.indexOf(name) === 0) res = val.substring(name.length);
+            })
+            return res;
+        }
+
+        ////////////////////////loaders////////////////////////
+        const backgroundLoader = new THREE.TextureLoader();
+        const fbxLoader = new FBXLoader();
+        const gltfLoader = new GLTFLoader();
+
+        ////////////////////////setup scene////////////////////////
+        clock = new THREE.Clock();
+        const scene = new THREE.Scene();
+        scene.background = backgroundLoader.load('../assets/img/2204.jpg');
+        document.getElementById('body').classList.toggle('backpurple');
+        const camera = new THREE.PerspectiveCamera(50, miniWindowSize.width / miniWindowSize.height);
+        camera.position.set(0, 0, 180);
+
+        const renderer = new THREE.WebGLRenderer();
+        renderer.setSize(miniWindowSize.width, miniWindowSize.height);
+        document.body.appendChild(renderer.domElement);
+        //const cameraControl = new OrbitControls(camera, renderer.domElement)
+        var audio = document.getElementsByTagName("audio")[0];
+
+        var selControl = getCookie("control");
+        var izq = 65;
+        var der = 68;
+        if (selControl != null) {
+            if (selControl == "flechas") {
+                izq = 37;
+                der = 39;
+            }
+        }
+        audio.volume = getCookie("varVolumen");
+        audio.play();
+
+        ////////////////////////luces////////////////////////
+        const directionalLight = new THREE.DirectionalLight(0x404040);
+        directionalLight.position.set(30, 30, 0);
+        scene.add(directionalLight);
+        const ambientlight = new THREE.AmbientLight(0xFFFFFF);
+        scene.add(ambientlight);
+        const hemisphereLight = new THREE.HemisphereLight(0xffffbb, 0x080820, 1);
+        scene.add(hemisphereLight);
+
+        ////////////////////////models////////////////////////
+        const bombBox = new THREE.Mesh(
+            new THREE.BoxGeometry(10, 10, 10),
+            new THREE.MeshPhongMaterial({ color: 0xF7862D, opacity: 0.01, transparent: true })
+        );
+        bombBox.position.set(0, 105, 7);
+        scene.add(bombBox);
+        bombBB = new THREE.Box3();
+        bombBB.setFromObject(bombBox);
+        gltfLoader.load(
+            '../../assets/3DModels/GLB/bomb.glb',
+            function (gltf) {
+                let bomb = gltf.scene;
+                bomb.position.set(0, 100, 7);
+                scene.add(bomb);
+                bomb.name = 'bomb';
+                let bomb2 = bomb.clone();
+                bomb2.position.set(-80, 160, 7);
+                scene.add(bomb2);
+                bomb2.name = 'bomb2';
+                let bomb3 = bomb.clone();
+                bomb3.position.set(20, 130, 7);
+                scene.add(bomb3);
+                bomb3.name = 'bomb3';
+                let bomb4 = bomb.clone();
+                bomb4.position.set(-20, 380, 7);
+                scene.add(bomb4);
+                bomb4.name = 'bomb4';
+                let bomb5 = bomb.clone();
+                bomb5.position.set(40, 220, 7);
+                scene.add(bomb5);
+                bomb5.name = 'bomb5';
+                let bomb6 = bomb.clone();
+                bomb6.position.set(-40, 190, 7);
+                scene.add(bomb6);
+                bomb6.name = 'bomb6';
+                let bomb7 = bomb.clone();
+                bomb7.position.set(60, 290, 7);
+                scene.add(bomb7);
+                bomb7.name = 'bomb7';
+                let bomb8 = bomb.clone();
+                bomb8.position.set(-60, 270, 7);
+                scene.add(bomb8);
+                bomb8.name = 'bomb8';
+                let bomb9 = bomb.clone();
+                bomb9.position.set(80, 240, 7);
+                scene.add(bomb9);
+                bomb9.name = 'bomb9';
+            }
+        );
+
+        var bomBox2 = bombBox.clone();
+        bomBox2.position.set(-80, 166, 7);
+        scene.add(bomBox2);
+        bomb2BB = new THREE.Box3();
+        bomb2BB.setFromObject(bomBox2);
+
+        var bomBox3 = bombBox.clone();
+        bomBox3.position.set(20, 136, 7);
+        scene.add(bomBox3);
+        bomb3BB = new THREE.Box3();
+        bomb3BB.setFromObject(bomBox3);
+
+        var bomBox4 = bombBox.clone();
+        bomBox4.position.set(-20, 386, 7);
+        scene.add(bomBox4);
+        bomb4BB = new THREE.Box3();
+        bomb4BB.setFromObject(bomBox4);
+
+        var bomBox5 = bombBox.clone();
+        bomBox5.position.set(40, 226, 7);
+        scene.add(bomBox5);
+        bomb5BB = new THREE.Box3();
+        bomb5BB.setFromObject(bomBox5);
+
+        var bomBox6 = bombBox.clone();
+        bomBox6.position.set(-40, 196, 7);
+        scene.add(bomBox6);
+        bomb6BB = new THREE.Box3();
+        bomb6BB.setFromObject(bomBox6);
+
+        var bomBox7 = bombBox.clone();
+        bomBox7.position.set(60, 296, 7);
+        scene.add(bomBox7);
+        bomb7BB = new THREE.Box3();
+        bomb7BB.setFromObject(bomBox7);
+
+        var bomBox8 = bombBox.clone();
+        bomBox8.position.set(-60, 276, 7);
+        scene.add(bomBox8);
+        bomb8BB = new THREE.Box3();
+        bomb8BB.setFromObject(bomBox8);
+
+        var bomBox9 = bombBox.clone();
+        bomBox9.position.set(80, 246, 7);
+        scene.add(bomBox9);
+        bomb9BB = new THREE.Box3();
+        bomb9BB.setFromObject(bomBox9);
+
+        ////// Player //////
+        fbxLoader.load(
+            '../../assets/3DModels/FBX/isabelle.fbx',
+            (rover) => {
+                rover.position.set(0, -75, 0);
+                scene.add(rover);
+                rover.name = "rover";
+            }
+        );
+        const player = new THREE.Mesh(
+            new THREE.BoxGeometry(20, 25, 25),
+            new THREE.MeshPhongMaterial({ color: 0x9F8570, opacity: 0.01, transparent: true })
+        );
+        player.position.set(0, -49, 8);
+        scene.add(player);
+        playerBB = new THREE.Box3();
+        playerBB.setFromObject(player);
+        const box = new THREE.BoxHelper(player, 0xffff00);
+        //scene.add(box);
+
+        ////////////////////////movement////////////////////////
+
+        function movis(obj1, obj2) {
+            document.onkeydown = function (e) {
+                if (e.keyCode === 27) {
+                    pausa = true;
+                    Swal.fire({
+                        title: 'Pausa',
+                        icon: 'info',
+                        confirmButtonColor: '#69ad60',
+                        confirmButtonText: 'Continuar',
+                        padding: '3em',
+                        background: '#fff url(/assets/img/patternbackgroundcute.jpg)',
+                        backdrop: `rgba(113,150,98,0.4)`
+                    }).then((result) => {
+                        if (result.isConfirmed || result.dismiss) {
+                            pausa = false;
+                        }
+                    })
+                }
+                if (e.keyCode === izq) {
+                    left1 = true;
+                }
+                if (e.keyCode === der) {
+                    right1 = true;
+                }
+            }
+            document.onkeyup = function (e) {
+                if (e.keyCode === izq) {
+                    left1 = false;
+                }
+                if (e.keyCode === der) {
+                    right1 = false;
+                }
+            }
+        }
+        ////////////////////////colisions////////////////////////
+        function checkCollisions() {
+            var bomb = scene.getObjectByName('bomb');
+            var bomb2 = scene.getObjectByName('bomb2');
+            var bomb3 = scene.getObjectByName('bomb3');
+            var bomb4 = scene.getObjectByName('bomb4');
+            var bomb5 = scene.getObjectByName('bomb5');
+            var bomb6 = scene.getObjectByName('bomb6');
+            var bomb7 = scene.getObjectByName('bomb7');
+            var bomb8 = scene.getObjectByName('bomb8');
+            var bomb9 = scene.getObjectByName('bomb9');
+
+            if (playerBB.intersectsBox(bombBB) || playerBB.intersectsBox(bomb2BB) || playerBB.intersectsBox(bomb3BB) ||
+                playerBB.intersectsBox(bomb4BB) || playerBB.intersectsBox(bomb5BB) || playerBB.intersectsBox(bomb6BB) ||
+                playerBB.intersectsBox(bomb7BB) || playerBB.intersectsBox(bomb8BB) || playerBB.intersectsBox(bomb9BB)) {
+                //fin del juego
+                stopAnimation();
+                Swal.fire({
+                    title: 'Juego terminado',
+                    text: `Tu puntuacion final es: ${puntos}`,
+                    confirmButtonColor: '#69ad60',
+                    confirmButtonText: 'Volver a jugar',
+                    showCancelButton: true,
+                    cancelButtonColor: '#fe6d73',
+                    cancelButtonText: 'Compartir puntuacion',
+                    padding: '3em',
+                    background: '#fff url(/assets/img/patternbackgroundcute.jpg)',
+                    backdrop: `rgba(113,150,98,0.4)`
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.location.reload();
+                    } else if (result.isDenied) {
+
+                    } else if (result.dismiss) {
+                        window.location = "/html/index.html"
+                    }
+                })
+
+            } else if (bombBox.position.y < -100) {
+                restart(bomb, bombBox);
+                puntos = puntos + 1;
+            } else if (bomBox2.position.y < -100) {
+                restart(bomb2, bomBox2);
+                puntos = puntos + 1;
+            } else if (bomBox3.position.y < -100) {
+                restart(bomb3, bomBox3);
+                puntos = puntos + 1;
+            } else if (bomBox4.position.y < -100) {
+                restart(bomb4, bomBox4);
+                puntos = puntos + 1;
+            } else if (bomBox5.position.y < -100) {
+                restart(bomb5, bomBox5);
+                puntos = puntos + 1;
+            } else if (bomBox6.position.y < -100) {
+                restart(bomb6, bomBox6);
+                puntos = puntos + 1;
+            } else if (bomBox7.position.y < -100) {
+                restart(bomb7, bomBox7);
+                puntos = puntos + 1;
+            } else if (bomBox8.position.y < -100) {
+                restart(bomb8, bomBox8);
+                puntos = puntos + 1;
+            } else if (bomBox9.position.y < -100) {
+                restart(bomb9, bomBox9);
+                puntos = puntos + 1;
+            }
+        }
+
+        function restart(fruta, cubo) {
+            let rand = randomize(241, 120, 1);
+            let rand2 = randomize(500, 110, 2);
+            cubo.position.set(rand, rand2 + 6, 7);
+            fruta.position.set(rand, rand2, 7);
+        }
+
+        function randomize(max, min, op) {
+            let value;
+            switch (op) {
+                case 1: // Numeros negativos y positivos entre los rangos de min y max 
+                    value = Math.floor(Math.random() * max) - min;
+                    break;
+                case 2: // Numeros entre 2 valores positivos
+                    value = Math.floor(Math.random() * (max - min) + min);
+                    break;
+            }
+            return value;
+        }
+
+        function score() {
+            let scoreData = document.getElementById('score');
+            scoreData.innerHTML = 'Puntos: ' + puntos;
+        }
+
+        function isPaused() {
+            pausa ? stopAnimation() : console.log('')
+        }
+
+        function isDead() {
+            if (vidas == 0) {
+                stopAnimation();
+                Swal.fire({
+                    title: 'Juego terminado',
+                    text: `Tu puntuacion final es: ${puntos}`,
+                    confirmButtonColor: '#69ad60',
+                    confirmButtonText: 'Volver a jugar',
+                    showCancelButton: true,
+                    cancelButtonColor: '#fe6d73',
+                    cancelButtonText: 'Compartir puntuacion',
+                    padding: '3em',
+                    background: '#fff url(/assets/img/patternbackgroundcute.jpg)',
+                    backdrop: `rgba(113,150,98,0.4)`
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.location.reload();
+                    } else if (result.isDenied) {
+
+                    } else if (result.dismiss) {
+                        window.location = "/html/index.html"
+                    }
+                })
+            }
+        }
+
+        ////////////////////////render////////////////////////
+        function animate() {
+            requestID = requestAnimationFrame(animate);
+            deltaTime = clock.getDelta();
+            const timer = 0.0001 * Date.now();
+            var rover = scene.getObjectByName('rover');
+            movis(rover, deltaTime);
+            playerBB.copy(player.geometry.boundingBox).applyMatrix4(player.matrixWorld);
+            var bomb = scene.getObjectByName('bomb');
+            var bomb2 = scene.getObjectByName('bomb2');
+            var bomb3 = scene.getObjectByName('bomb3');
+            var bomb4 = scene.getObjectByName('bomb4');
+            var bomb5 = scene.getObjectByName('bomb5');
+            var bomb6 = scene.getObjectByName('bomb6');
+            var bomb7 = scene.getObjectByName('bomb7');
+            var bomb8 = scene.getObjectByName('bomb8');
+            var bomb9 = scene.getObjectByName('bomb9');
+
+            bomb.position.y -= speed * deltaTime;
+            bombBox.position.y -= speed * deltaTime;
+            bomb2.position.y -= speed * deltaTime;
+            bomBox2.position.y -= speed * deltaTime;
+            bomb3.position.y -= speed * deltaTime;
+            bomBox3.position.y -= speed * deltaTime;
+            bomb4.position.y -= speed * deltaTime;
+            bomBox4.position.y -= speed * deltaTime;
+            bomb5.position.y -= speed * deltaTime;
+            bomBox5.position.y -= speed * deltaTime;
+            bomb6.position.y -= speed * deltaTime;
+            bomBox6.position.y -= speed * deltaTime;
+            bomb7.position.y -= speed * deltaTime;
+            bomBox7.position.y -= speed * deltaTime;
+            bomb8.position.y -= speed * deltaTime;
+            bomBox8.position.y -= speed * deltaTime;
+            bomb9.position.y -= speed * deltaTime;
+            bomBox9.position.y -= speed * deltaTime;
+
+            bombBB.copy(bombBox.geometry.boundingBox).applyMatrix4(bombBox.matrixWorld);
+            bomb2BB.copy(bomBox2.geometry.boundingBox).applyMatrix4(bomBox2.matrixWorld);
+            bomb3BB.copy(bomBox3.geometry.boundingBox).applyMatrix4(bomBox3.matrixWorld);
+            bomb4BB.copy(bomBox4.geometry.boundingBox).applyMatrix4(bomBox4.matrixWorld);
+            bomb5BB.copy(bomBox5.geometry.boundingBox).applyMatrix4(bomBox5.matrixWorld);
+            bomb6BB.copy(bomBox6.geometry.boundingBox).applyMatrix4(bomBox6.matrixWorld);
+            bomb7BB.copy(bomBox7.geometry.boundingBox).applyMatrix4(bomBox7.matrixWorld);
+            bomb8BB.copy(bomBox8.geometry.boundingBox).applyMatrix4(bomBox8.matrixWorld);
+            bomb9BB.copy(bomBox9.geometry.boundingBox).applyMatrix4(bomBox9.matrixWorld);
+
+            if (left1 == true) {
+                rover.position.x -= playerSpeed * deltaTime;
+                player.position.x -= playerSpeed * deltaTime;
+                if (rover.position.x < -125) {
+                    rover.position.x = -125;
+                    player.position.x = -125;
+                }
+            }
+            if (right1 == true) {
+                rover.position.x += playerSpeed * deltaTime;
+                player.position.x += playerSpeed * deltaTime;
+                if (rover.position.x > 125) {
+                    rover.position.x = 125;
+                    player.position.x = 125;
+                }
+            }
+            checkCollisions();
+            score();
+            isPaused();
+            renderer.render(scene, camera);
+        }
+
+        function stopAnimation() {
+            cancelAnimationFrame(requestID);
+        }
+
+        animate();
+
+    </script>
+
+</body>
+
+</html>

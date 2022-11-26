@@ -122,7 +122,29 @@
                             })()
 
                         } else if (result.isDenied) {
-
+                            (async () => {
+                                const { value: fruit } = await Swal.fire({
+                                    title: 'Escoje la dificultad',
+                                    input: 'select',
+                                    showCloseButton: true,
+                                    background: '#fff url(/assets/img/patternbackgroundcute.jpg)',
+                                    backdrop: `rgba(103,89,122,0.4)`,
+                                    confirmButtonColor: '#69ad60',
+                                    inputOptions: {
+                                        'Niveles': {
+                                            facil: 'Facil',
+                                            medio: 'Medio'
+                                        }
+                                    }
+                                })
+                                if (fruit == 'facil') {
+                                    localStorage.setItem('dificultad', fruit);
+                                    window.location = "/html/game2.html";
+                                } else {
+                                    localStorage.setItem('dificultad', fruit);
+                                    window.location = "/html/game2.html";
+                                }
+                            })()
                         }
                     })
                     break;

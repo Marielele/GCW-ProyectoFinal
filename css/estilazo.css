@@ -60,6 +60,14 @@ body {
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#fe6d73",endColorstr="#fef9ef",GradientType=1);
 }
 
+.backpurple {
+    background: var(--purple);
+    background: -moz-linear-gradient(0deg, rgba(103, 89, 122) 0%, rgba(254,249,239,1) 100%);
+    background: -webkit-linear-gradient(0deg, rgba(103, 89, 122) 0%, rgba(254,249,239,1) 100%);
+    background: linear-gradient(0deg, rgba(103, 89, 122) 0%, rgba(254,249,239,1) 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#67597a",endColorstr="#fef9ef",GradientType=1);
+}
+
 #home{
     background-image: url(/assets/img/backgroundWLogo.png);
     height: 720px;
