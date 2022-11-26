@@ -12,6 +12,35 @@
     <link href="https://fonts.googleapis.com/css2?family=Delius+Unicase:wght@700&display=swap" rel="stylesheet">
     <script src="/js/sweetalert.js"></script>
     <script src="https://kit.fontawesome.com/89f32dc1fd.js" crossorigin="anonymous"></script>
+
+    <script>
+        import { initializeApp } from "firebase/app";
+        const firebaseConfig = {
+          apiKey: "AIzaSyAfFNZPF3J2TaQ2LTorwR4R4GKYcVU53Uo",
+          authDomain: "gcw-proyectofinal.firebaseapp.com",
+          projectId: "gcw-proyectofinal",
+          storageBucket: "gcw-proyectofinal.appspot.com",
+          messagingSenderId: "584878992755",
+          appId: "1:584878992755:web:2b847f9d60f88fa7bd2906"
+        };
+        const app = initializeApp(firebaseConfig);
+    
+    
+        FB.api(
+      '/me',
+      'GET',
+      {"fields":"id,name"},
+      function(response) {
+          // Insert your code here
+      }
+    );
+    
+    import { FacebookAuthProvider } from "firebase/auth";
+
+const provider = new FacebookAuthProvider();
+
+    </script>
+
     <title>Frenzy Fruit</title>
 </head>
 
