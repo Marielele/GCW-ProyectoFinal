@@ -68,7 +68,7 @@ body {
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#67597a",endColorstr="#fef9ef",GradientType=1);
 }
 
-#home{
+#home {
     background-image: url(/assets/img/backgroundWLogo.png);
     height: 720px;
     width: 1280px;
@@ -76,9 +76,19 @@ body {
     justify-content: center;
     align-items: center;
 }
-#setting{
+
+#setting {
     background-color: darkgoldenrod;
     background-image: url(/assets/img/backgroundSettings.png);
+    height: 720px;
+    width: 1280px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#scores {
+    background-image: url(/assets/img/backgroundScore.png);
     height: 720px;
     width: 1280px;
     display: flex;
@@ -176,4 +186,13 @@ a:hover {
 
 .cuteFont {
     font-family: 'Delius Unicase', cursive;
+}
+
+.tableDef {
+    text-align: center;
+}
+
+th {
+    padding-left: 20px;
+    padding-right: 20px;
 }
